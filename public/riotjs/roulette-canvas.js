@@ -9,11 +9,15 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas" onclick="{impact}"></canv
 
     var roulette = new RouletteView(Math.PI);
 
-    var toggle = 1;
+    var toggle = true;
+
+    var now = null;
     this.impact = function(e){
-      toggle = -toggle;
-      console.log(toggle);
-      roulette.impact(Date.now(), toggle * 10);
+      now = Date.now();
+      console.log("impact Now :" + now);
+      roulette.impact(now, 5);
+
+      toggle = !toggle;
     }.bind(this)
 
     function drawFrame(ms_from_opened){

@@ -13,15 +13,19 @@ roulette-canvas
 
     var roulette = new RouletteView(Math.PI);
 
-    var toggle = 1;
+    var toggle = true;
+
+    var now = null;
     impact(e){
-      toggle = -toggle;
-      console.log(toggle);
-      roulette.impact(Date.now(), toggle * 10);
+      now = Date.now();
+      console.log("impact Now :" + now);
+      roulette.impact(now, 5);
+
+      toggle = !toggle;
     }
 
     function drawFrame(ms_from_opened){
-      //ms_from_opened = don't use
+      //ms_from_opened  使えない。なぜなら、任意のときにこれを呼べないから
       c.clearRect(0,0,canvas.width, canvas.width);
 
       roulette.calcCurrentAngle(Date.now());
