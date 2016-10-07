@@ -6,7 +6,7 @@ function RouletteView(angle){
 
   //とりあえず最初はいつでも0の位置
   this.currentFunction = function(){ 
-    return {position : new Angle(0)}
+    return {position : 0, velocity:0}
   }
   this.friction = 0.5;
 }
@@ -26,12 +26,12 @@ RouletteView.prototype.impact = function(timestamp){
   this.currentFunction = this.generateMoveFunction(impactTime, impactValue);
 }
 
-RouletteView.prototype.generateMoveFunction= function(impactTime, impactValue){
-
+RouletteView.prototype.generateMoveFunction = function(impactTime, impactValue){
   console.log("impact! " + impactTime + " " + impactValue);
   var obj = this.currentFunction(impactTime);
-  var currentAngle = obj.position.get();
-  
+  var currentAngle = obj.position;
+  var currentVelocity = obj.velocity;
+
   var stoppedAngle = null;
   //impactTimeは保存される
 
@@ -42,7 +42,7 @@ RouletteView.prototype.generateMoveFunction= function(impactTime, impactValue){
 
     var f = this.friction;
 
-    var velocity = - f *t_sec + 1;
+    var velocity = - f * t_sec + 1;
     console.log( "velocity " + velocity );
 
     var position =  -1/2 * f *t_sec*t_sec + t_sec + currentAngle;
@@ -53,21 +53,22 @@ RouletteView.prototype.generateMoveFunction= function(impactTime, impactValue){
       }
 
       return {
-        position:new Angle(stoppedAngle),
-      }
+        position:stoppedAngle,
+        velocity:0
+      };
     }
-
 
     return {
-      position:new Angle(position),
-    }
+      position:position,
+      velocity:velocity
+    };
   };
 };
 
 RouletteView.prototype.calcCurrentAngle = function(timestamp){
-  this.angle = this.currentFunction(timestamp).position;
-  console.log(this.angle);
+  this.angle.set(this.currentFunction(timestamp).position);
 
+  console.log(this.angle);
 };
 
 
