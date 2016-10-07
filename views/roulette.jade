@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p roulette
+
+  roulette-canvas
+
+  script(type="text/javascript" src="/javascripts/riot.min.js")
+  script(type="text/javascript" src="/javascripts/Angle.js")
+  script(type="text/javascript" src="/javascripts/RouletteView.js")
+  script(type="text/javascript" src="/javascripts/canvaslib.js")
+  script(type="text/javascript" src="/riotjs/roulette-canvas.js")
+
+  script.
+    riot.mount("roulette-canvas");
+

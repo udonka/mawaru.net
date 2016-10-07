@@ -1,0 +1,14 @@
+//////////// basic framework////////////
+@import "normalize";
+@import "bourbon";
+@import "base/grid-settings";
+@import "neat";
+@import "base/base"; //bitters これは変えちゃっていいもの。
+
+body {
+}
+
+a {
+  color: #00B7FF;
+}
+

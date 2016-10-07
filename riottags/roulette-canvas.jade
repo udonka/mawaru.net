@@ -1,0 +1,53 @@
+roulette-canvas
+  canvas(name="thecanvas" onclick="{impact}")
+
+  script.
+    var canvas = this.thecanvas;
+
+    
+    canvas.width = 800;
+    canvas.height = 800;
+
+    var c = canvas.getContext("2d");
+
+
+    var roulette = new RouletteView(Math.PI);
+
+    var toggle = 1;
+    impact(e){
+      toggle = -toggle;
+      roulette.impact(Date.now(), toggle * 10);
+    }
+
+    function drawFrame(ms_from_opened){
+      //ms_from_opened = don't use
+      c.clearRect(0,0,canvas.width, canvas.width);
+
+      roulette.calcCurrentAngle(Date.now());
+      roulette.draw(c);
+    }
+
+    //アニメーションの設定
+    (function animationSettings(){
+      //関数を設定
+      (function() {
+        var requestAnimationFrame = 
+          window.requestAnimationFrame || 
+          window.mozRequestAnimationFrame ||
+          window.webkitRequestAnimationFrame || 
+          window.msRequestAnimationFrame;
+
+        window.requestAnimationFrame = requestAnimationFrame;
+      }());
+
+      //ステップ
+      function frame( timestamp ){
+        drawFrame( timestamp );
+        requestAnimationFrame(frame);
+      }
+      //一秒後に開始する。何かと読み込むから。それともちょうどいいイベントないかしら
+      setTimeout(function(){
+        requestAnimationFrame(frame);
+      },1000);
+    }());
+
