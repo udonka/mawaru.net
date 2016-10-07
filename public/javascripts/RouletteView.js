@@ -6,9 +6,9 @@ function RouletteView(angle){
 
   //とりあえず最初はいつでも0の位置
   this.currentFunction = function(){ 
-    return {position : 0, velocity:0}
+    return {angle : 0, velocity:0}
   }
-  this.friction = 0.5;
+  this.friction = 1; // rad / sec^2
 }
 
 RouletteView.prototype.setAngle = function(angle){
@@ -17,9 +17,8 @@ RouletteView.prototype.setAngle = function(angle){
 }
 
 
-RouletteView.prototype.impact = function(timestamp){
+RouletteView.prototype.impact = function(timestamp, impactValue){
   var impactTime = timestamp;
-  var impactValue = 10;
 
   console.log("impact");
 
@@ -28,47 +27,63 @@ RouletteView.prototype.impact = function(timestamp){
 
 RouletteView.prototype.generateMoveFunction = function(impactTime, impactValue){
   console.log("impact! " + impactTime + " " + impactValue);
-  var obj = this.currentFunction(impactTime);
-  var currentAngle = obj.position;
-  var currentVelocity = obj.velocity;
 
-  var stoppedAngle = null;
+  //今までどおりの関数で、角度と角速度を計算
+  var obj = this.currentFunction(impactTime);
+
+  var impactVelocity = obj.velocity + impactValue;
+  var impactAngle = obj.angle;
+
   //impactTimeは保存される
 
+  //impactTime, impactVelocity, impactAngle を束縛するクロージャを返す
+  //impactValueは、impactVelocityの中に入っている。
   return function(timestamp){
-    var t_ms = timestamp - impactTime; //impactTimeを基準にした時間に変換
+    //impactTimeを基準にした時間に変換
+    //これにより、計算が非常に楽になる。
+    var t_ms = timestamp - impactTime; 
 
     var t_sec = t_ms / 1000;
 
-    var f = this.friction;
+    console.log(t_sec);
+    //摩擦力は、速度の方向とは逆方向
+    var f = - this.friction * (impactVelocity>0 ? 1 : -1);
 
-    var velocity = - f * t_sec + 1;
-    console.log( "velocity " + velocity );
+    var velocity = f * t_sec + impactVelocity;
+                   //摩擦減速  //切片: 初めの速度
 
-    var position =  -1/2 * f *t_sec*t_sec + t_sec + currentAngle;
+    //velocity は angle を微分したもの。
+    var angle = 
+      1/2*f*t_sec*t_sec +     //2次項  摩擦減速
+      impactVelocity*t_sec + //1次項  慣性
+      impactAngle;           //定数項 初めの角度
+                
 
-    if(velocity <= 0){ //基準速度と逆になった唖
-      if(stoppedAngle == null){
-        stoppedAngle =  position;
+
+    //基準速度と速度が逆になった場合:減衰による停止
+    if(impactVelocity * velocity < 0){ 
+      //これ以降は位置は固定で速度は0のはず
+      this.currentFunction = function(){
+        return {
+          angle:angle,
+          velocity:0
+        };
       }
-
-      return {
-        position:stoppedAngle,
-        velocity:0
-      };
+      //早速↑の関数を使う  
+      return this.currentFunction();
     }
 
+    //位置と速度を返す
     return {
-      position:position,
+      angle:angle,
       velocity:velocity
     };
   };
 };
 
 RouletteView.prototype.calcCurrentAngle = function(timestamp){
-  this.angle.set(this.currentFunction(timestamp).position);
+  this.angle.set(this.currentFunction(timestamp).angle);
 
-  console.log(this.angle);
 };
 
 

@@ -16,6 +16,7 @@ roulette-canvas
     var toggle = 1;
     impact(e){
       toggle = -toggle;
+      console.log(toggle);
       roulette.impact(Date.now(), toggle * 10);
     }
 

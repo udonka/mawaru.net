@@ -12,6 +12,7 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas" onclick="{impact}"></canv
     var toggle = 1;
     this.impact = function(e){
       toggle = -toggle;
+      console.log(toggle);
       roulette.impact(Date.now(), toggle * 10);
     }.bind(this)
 
