@@ -1,35 +1,84 @@
 roulette-canvas
-  canvas(name="thecanvas" onclick="{impact}")
+  canvas(name="thecanvas" )
+  ul
+    li(each="{this.forceHistory}") time:{this.time} value:{this.value}
+
+  input(type="submit" onclick="{replay}" value="再生")
+      
 
   script.
     var canvas = this.thecanvas;
 
     
-    canvas.width = 800;
-    canvas.height = 800;
+    var width  = canvas.width  = 800;
+    var height = canvas.height = 800;
 
     var c = canvas.getContext("2d");
 
+    var roulette = new Roulette(Math.PI);
 
-    var roulette = new RouletteView(Math.PI);
+    var rouletteFinger = new RouletteFinger(roulette, {
+      center: new Vec2(width/2, height/2),
+      radius: width * 0.9 /2
+    });
 
-    var toggle = true;
+    var rouletteView = new RouletteView(roulette, rouletteFinger, {
 
-    var now = null;
+      center: new Vec2(width/2, height/2),
+      radius: width * 0.9 /2
+    });
+
+
+
+    canvas.addEventListener("pointerdown",function(e){
+      e.preventDefault();
+      rouletteFinger.pointerDown(e);
+    });
+
+    canvas.addEventListener("pointerup",function(e){
+      e.preventDefault();
+      rouletteFinger.pointerUp(e);
+    });
+
+    canvas.addEventListener("pointermove",function(e){
+      e.preventDefault();
+      rouletteFinger.pointerMove(e);
+    });
+
+
     impact(e){
-      now = Date.now();
+      var now = Date.now();
       console.log("impact Now :" + now);
       roulette.impact(now, 5);
 
-      toggle = !toggle;
+
+      this.forceHistory = roulette.forceHistory;
     }
+
+
+    /*
+    var diff = 0;
+
+    replay(e){
+      first = roulette.firstImpactTime();
+      //今を基準として、どれぐらい昔だったか
+      diff = first - Date.now() - 1000; 
+    }
+
+    {
+        var now = Date.now();
+        var thatTime = now + diff;
+        roulette.calcAngle(thatTime);
+        roulette.draw(c);
+    }*/
 
     function drawFrame(ms_from_opened){
       //ms_from_opened  使えない。なぜなら、任意のときにこれを呼べないから
+
       c.clearRect(0,0,canvas.width, canvas.width);
 
       roulette.calcCurrentAngle(Date.now());
-      roulette.draw(c);
+      rouletteView.draw(c);
     }
 
     //アニメーションの設定

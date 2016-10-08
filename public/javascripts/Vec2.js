@@ -88,7 +88,7 @@ Vec2.prototype.setTheta = function(theta){
   */
   
 Vec2.prototype.getTheta = function(){
-  return Math.atan2(y,x);
+  return Math.atan2(this.y,this.x);
 };
 
   /**
