@@ -1,12 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p roulette
-
   roulette-canvas
+  labels-textarea
 
-
+  script(type="text/javascript" src="/javascripts/underscore-min.js")
   script(type="text/javascript" src="/javascripts/hand.min.js")
   script(type="text/javascript" src="/javascripts/riot.min.js")
   script(type="text/javascript" src="/javascripts/Angle.js")
@@ -16,7 +14,12 @@ block content
   script(type="text/javascript" src="/javascripts/RouletteFinger.js")
   script(type="text/javascript" src="/javascripts/canvaslib.js")
   script(type="text/javascript" src="/riotjs/roulette-canvas.js")
+  script(type="text/javascript" src="/riotjs/labels-textarea.js")
 
   script.
-    riot.mount("roulette-canvas");
+    var labels = ["Hitokage","Fusigidane", "Mizugame", ];
+    var roulette = new Roulette(0,Math.PI, labels);
+
+    riot.mount("roulette-canvas", {roulette:roulette});
+    riot.mount("labels-textarea", {roulette:roulette});
 

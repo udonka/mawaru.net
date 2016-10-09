@@ -1,37 +1,35 @@
 
-riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas> <ul> <li each="{this.forceHistory}">time:{this.time} value:{this.value}</li> </ul> <input type="submit" onclick="{replay}" value="再生">', '', '', function(opts) {
+riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', function(opts) {
+    this.roulette = opts.roulette;
     var canvas = this.thecanvas;
 
-    var width  = canvas.width  = 800;
-    var height = canvas.height = 800;
+    var width  = canvas.width  = 500;
+    var height = canvas.height = 300;
+    var c      = canvas.getContext("2d");
 
-    var c = canvas.getContext("2d");
+    var opts = {
+      center: new Vec2(width* 0.5, height*  0.5),
+      radius: width * 0.5
+    };
 
-    var roulette = new Roulette(Math.PI);
+    var rouletteFinger = new RouletteFinger(roulette, opts);
 
-    var rouletteFinger = new RouletteFinger(roulette, {
-      center: new Vec2(width/2, height/2),
-      radius: width * 0.9 /2
-    });
+    var rouletteView = new RouletteView(roulette, rouletteFinger, opts);
 
-    var rouletteView = new RouletteView(roulette, rouletteFinger, {
-
-      center: new Vec2(width/2, height/2),
-      radius: width * 0.9 /2
-    });
+    rouletteFinger.setEventListener(canvas);
 
     canvas.addEventListener("pointerdown",function(e){
-      e.preventDefault();
+
       rouletteFinger.pointerDown(e);
     });
 
     canvas.addEventListener("pointerup",function(e){
-      e.preventDefault();
+
       rouletteFinger.pointerUp(e);
     });
 
     canvas.addEventListener("pointermove",function(e){
-      e.preventDefault();
+
       rouletteFinger.pointerMove(e);
     });
 
@@ -40,14 +38,18 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas> <ul> <li each="
       console.log("impact Now :" + now);
       roulette.impact(now, 5);
 
-      this.forceHistory = roulette.forceHistory;
     }.bind(this)
 
     function drawFrame(ms_from_opened){
 
-      c.clearRect(0,0,canvas.width, canvas.width);
-
       roulette.calcCurrentAngle(Date.now());
+
+      if(roulette.getVelocity() == 0 && !roulette.isChanged()){
+
+        return;
+      }
+
+      c.clearRect(0,0,canvas.width, canvas.width);
       rouletteView.draw(c);
     }
 

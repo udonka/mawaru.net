@@ -4,19 +4,43 @@ function RouletteFinger(roulette, opts){
   this.center = opts.center || new Vec2(0,0);
   this.radius = opts.radius || 200;
 
-
   this.downPoint = null;
   this.upPoint = null;
   this.currentPoint = null;
   this.downTime = null;
+}
 
+RouletteFinger.prototype.setEventListener = function(canvas){
+
+  var this_finger = this;
+
+  canvas.addEventListener("pointerdown",function(e){
+    //e.preventDefault();
+    this_finger.pointerDown(e);
+  });
+
+  canvas.addEventListener("pointerup",function(e){
+    //e.preventDefault();
+    this_finger.pointerUp(e);
+  });
+
+  canvas.addEventListener("pointermove",function(e){
+    //e.preventDefault();
+    this_finger.pointerMove(e);
+  });
 }
 
 
 RouletteFinger.prototype.pointerDown = function(e){
 
-  this.downPoint = new Vec2(e.offsetX, e.offsetY)
+  var downPoint = new Vec2(e.offsetX, e.offsetY)
                    .sub(this.center).div(this.radius);
+
+  if(downPoint.getLength() < 0.1){
+    return;
+  }
+
+  this.downPoint = downPoint;
 
   this.downTime = Date.now();
 
@@ -64,7 +88,9 @@ RouletteFinger.prototype.pointerUp = function(e){
 
   var impactForce = diffAngle.get() / diffTime;
 
-  this.roulette.impact(now, impactForce);
+  if(!isNaN(impactForce) && impactForce != 0){
+    this.roulette.impact(now, impactForce);
+  }
 
 
   this.downPoint = null;
