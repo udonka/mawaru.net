@@ -106,10 +106,9 @@ RouletteView.prototype.drawWheel = function(c, theta, labels, currentLabel){
     c.restore();
 
 
-    c.lineWidth = 5;
-    c.strokeStyle="#e00"
-
-    c.strokeRect(0,0,100,0);
+    //c.lineWidth = 5;
+    //c.strokeStyle="#e00"
+    //c.strokeRect(0,0,100,0);
 
 
 
