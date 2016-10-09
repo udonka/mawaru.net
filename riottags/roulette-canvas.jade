@@ -1,50 +1,44 @@
 roulette-canvas
   canvas(name="thecanvas")
 
-
   script.
     this.roulette = opts.roulette;
     var canvas = this.thecanvas;
 
-    var width  = canvas.width  = 500;
-    var height = canvas.height = 300;
     var c      = canvas.getContext("2d");
 
+    this.on("mount",function(){
+      var parent = this.root.parentNode;
+
+      var width = parent.offsetWidth;
+      var height= width;
+
+      canvas.width  = width ;
+      canvas.height = height ;
 
 
 
-    var opts = {
-      center: new Vec2(width* 0.5, height*  0.5),
-      radius: width * 0.5
-    };
+      var opts = {
+        center: new Vec2(width* 0.5, height*  0.5),
+        radius: width * 0.5
+      };
 
-    var rouletteFinger = new RouletteFinger(roulette, opts);
+      this.rouletteFinger = new RouletteFinger(roulette, opts);
 
-    var rouletteView = new RouletteView(roulette, rouletteFinger, opts);
+      this.rouletteView = new RouletteView(roulette, this.rouletteFinger, opts);
 
 
-    rouletteFinger.setEventListener(canvas);
+      this.rouletteFinger.setEventListener(canvas);
 
-    canvas.addEventListener("pointerdown",function(e){
-      //e.preventDefault();
-      rouletteFinger.pointerDown(e);
+      //アニメーション開始
+      animationSettings();
+
     });
-
-    canvas.addEventListener("pointerup",function(e){
-      //e.preventDefault();
-      rouletteFinger.pointerUp(e);
-    });
-
-    canvas.addEventListener("pointermove",function(e){
-      //e.preventDefault();
-      rouletteFinger.pointerMove(e);
-    });
-
 
     impact(e){
       var now = Date.now();
       console.log("impact Now :" + now);
-      roulette.impact(now, 5);
+      this.roulette.impact(now, 5);
 
     }
 
@@ -65,8 +59,13 @@ roulette-canvas
         roulette.draw(c);
     }*/
 
+    
+    this_tag = this;
+
     function drawFrame(ms_from_opened){
       //ms_from_opened  使えない。なぜなら、任意のときにこれを呼べないから
+      
+      var roulette = this_tag.roulette;
 
       roulette.calcCurrentAngle(Date.now());
 
@@ -76,11 +75,11 @@ roulette-canvas
       }
 
       c.clearRect(0,0,canvas.width, canvas.width);
-      rouletteView.draw(c);
+      this_tag.rouletteView.draw(c);
     }
 
     //アニメーションの設定
-    (function animationSettings(){
+    function animationSettings(){
       //関数を設定
       (function() {
         var requestAnimationFrame = 
@@ -100,6 +99,6 @@ roulette-canvas
       //一秒後に開始する。何かと読み込むから。それともちょうどいいイベントないかしら
       setTimeout(function(){
         requestAnimationFrame(frame);
-      },1000);
-    }());
+      },0);
+    }
 

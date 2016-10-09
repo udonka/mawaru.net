@@ -1,5 +1,5 @@
 
-riot.tag2('labels-textarea', '<textarea rows="5" cols="40" name="labels_text" onkeyup="{labelsChange}">{joined_labels}</textarea>', '', '', function(opts) {
+riot.tag2('labels-textarea', '<textarea class="labels-text" rows="5" cols="40" name="labels_text" onkeyup="{labelsChange}">{joined_labels}</textarea>', '', '', function(opts) {
     this.roulette = opts.roulette;
 
     this.on("update", function(){

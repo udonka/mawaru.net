@@ -12,3 +12,14 @@ a {
   color: #00B7FF;
 }
 
+
+.page{
+  @include outer-container();
+}
+
+
+.labels-text{
+  display:block;
+  width:100%;
+
+}

@@ -24,6 +24,12 @@ RouletteFinger.prototype.setEventListener = function(canvas){
     this_finger.pointerUp(e);
   });
 
+  canvas.addEventListener("pointerout",function(e){
+    //e.preventDefault();
+    this_finger.pointerUp(e);
+  });
+
+
   canvas.addEventListener("pointermove",function(e){
     //e.preventDefault();
     this_finger.pointerMove(e);
@@ -36,7 +42,8 @@ RouletteFinger.prototype.pointerDown = function(e){
   var downPoint = new Vec2(e.offsetX, e.offsetY)
                    .sub(this.center).div(this.radius);
 
-  if(downPoint.getLength() < 0.1){
+  var range = downPoint.getLength();
+  if(range < 0.1 || range > 1 ){
     return;
   }
 
@@ -64,6 +71,7 @@ RouletteFinger.prototype.pointerMove= function(e){
   this.currentImpact = impactForce;
 
 
+  e.preventDefault();
 }
 
 

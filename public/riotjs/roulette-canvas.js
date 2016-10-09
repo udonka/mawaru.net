@@ -3,44 +3,44 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
     this.roulette = opts.roulette;
     var canvas = this.thecanvas;
 
-    var width  = canvas.width  = 500;
-    var height = canvas.height = 300;
     var c      = canvas.getContext("2d");
 
-    var opts = {
-      center: new Vec2(width* 0.5, height*  0.5),
-      radius: width * 0.5
-    };
+    this.on("mount",function(){
+      var parent = this.root.parentNode;
 
-    var rouletteFinger = new RouletteFinger(roulette, opts);
+      var width = parent.offsetWidth;
+      var height= width;
 
-    var rouletteView = new RouletteView(roulette, rouletteFinger, opts);
+      canvas.width  = width ;
+      canvas.height = height ;
 
-    rouletteFinger.setEventListener(canvas);
+      var opts = {
+        center: new Vec2(width* 0.5, height*  0.5),
+        radius: width * 0.5
+      };
 
-    canvas.addEventListener("pointerdown",function(e){
+      this.rouletteFinger = new RouletteFinger(roulette, opts);
 
-      rouletteFinger.pointerDown(e);
-    });
+      this.rouletteView = new RouletteView(roulette, this.rouletteFinger, opts);
 
-    canvas.addEventListener("pointerup",function(e){
+      this.rouletteFinger.setEventListener(canvas);
 
-      rouletteFinger.pointerUp(e);
-    });
+      animationSettings();
 
-    canvas.addEventListener("pointermove",function(e){
-
-      rouletteFinger.pointerMove(e);
     });
 
     this.impact = function(e){
       var now = Date.now();
       console.log("impact Now :" + now);
-      roulette.impact(now, 5);
+      this.roulette.impact(now, 5);
 
     }.bind(this)
 
+    this_tag = this;
+
     function drawFrame(ms_from_opened){
+
+      var roulette = this_tag.roulette;
 
       roulette.calcCurrentAngle(Date.now());
 
@@ -50,10 +50,10 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
       }
 
       c.clearRect(0,0,canvas.width, canvas.width);
-      rouletteView.draw(c);
+      this_tag.rouletteView.draw(c);
     }
 
-    (function animationSettings(){
+    function animationSettings(){
 
       (function() {
         var requestAnimationFrame =
@@ -72,6 +72,6 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
 
       setTimeout(function(){
         requestAnimationFrame(frame);
-      },1000);
-    }());
+      },0);
+    }
 });
