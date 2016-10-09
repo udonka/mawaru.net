@@ -8,7 +8,10 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
     this.on("mount",function(){
       var parent = this.root.parentNode;
 
-      var width = parent.offsetWidth;
+      var parentWidth = parent.offsetWidth;
+      var windowHeight = window.innerHeight;
+
+      var width = Math.min(windowHeight - 100, parentWidth);
       var height= width;
 
       canvas.width  = width ;
@@ -16,7 +19,7 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
 
       var opts = {
         center: new Vec2(width* 0.5, height*  0.5),
-        radius: width * 0.5
+        radius: width * 0.48
       };
 
       this.rouletteFinger = new RouletteFinger(roulette, opts);
