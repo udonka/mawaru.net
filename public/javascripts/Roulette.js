@@ -34,6 +34,10 @@ function Roulette(angle, velocity, labels){
   }());
 }
 
+Roulette.prototype.setCommunicator =function(comm){
+  this.communicator = comm;
+
+}
 
 Roulette.prototype.setLabels =function(labels){
   this.changed = true;
@@ -84,6 +88,22 @@ Roulette.prototype.recentFunction = function(){
 };
 
 Roulette.prototype.impact = function(timestamp, impactValue){
+
+  //すでにこの力はかかってるんじゃないか
+
+  var recentTime = this.forceHistory[this.forceHistory.length -1].time;
+
+  //申し込まれたimpactが、昔のものだったら
+  if(recentTime >= timestamp){
+    return ; //なにもしない
+  }
+
+
+
+  if(this.communicator){
+    this.communicator.sendScratch(timestamp,impactValue);
+  }
+
   var impactTime = timestamp;
 
   console.log("impact! " + impactTime + " " + impactValue);

@@ -5,8 +5,10 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('minlette:server');
+var debug = require('debug')('mawaru:server');
 var http = require('http');
+var set_socket = require("../socket/set_socket.js");
+
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +22,10 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+set_socket(server);
+
+
 
 /**
  * Listen on provided port, on all network interfaces.
