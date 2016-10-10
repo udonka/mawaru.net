@@ -66,18 +66,29 @@ RouletteClient.prototype.impact = function(timestamp, impactValue){
   return this.model.impact(serverTime, impactValue);
 }
 
+
+RouletteClient.prototype.serverConnected = function(){
+  return this.connectionPromise;
+}
 RouletteClient.prototype.setReceivers= function(){
 
   var this_roulette = this;
 
-  this.socket.on("time_adjust",function(message){
+  this.connectionPromise = new Promise(function(resolve,reject){
+    this_roulette.socket.on("time_adjust",function(message){
 
-    var serverTime = message.timestamp;
-    var serverAngle = message.angle;
-    var serverVel = message.velocity;
+      var serverTime = message.timestamp;
+      var serverAngle = message.angle;
+      var serverVel = message.velocity;
 
-    this_roulette.initState(serverTime, serverAngle, serverVel);
+      this_roulette.initState(serverTime, serverAngle, serverVel);
 
+      resolve();
+    });
+
+    setTimeout(function(){
+      reject(new Error("10秒以内にサーバーにつなげなかったのでアウトー"));
+    }, 10 * 1000);
   });
 
   this.socket.on("server_scratch",function(message){

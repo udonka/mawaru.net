@@ -33,8 +33,11 @@ roulette-canvas
 
       this.rouletteFinger.setEventListener(canvas);
 
-      //アニメーション開始
-      animationSettings();
+      //サーバーとのコネクションができたら、アニメーション開始
+      this.roulette.serverConnected().then(function(){
+        console.log("server connected");
+        animationSettings();
+      });
 
     });
 

@@ -1,5 +1,4 @@
 var isServer = function(){
-  console.log("This is server");
   return (typeof window == "undefined")
 }
 
@@ -88,23 +87,6 @@ Roulette.prototype.getVelocity = function(){
 
 Roulette.prototype.getAngle = function(){
   return this.angle.get();
-};
-
-Roulette.prototype.recentState = function(){
-  var recentHistory = this.forceHistory[this.forceHistory.length - 1];
-  var time = recentHistory.time;
-  var value = recentHistory.value;
-  var func = recentHistory.func;
-  var ang_vel = func(time);
-  var angle = ang_vel.angle;
-  var velocity = ang_vel.velocity;
-
-  return {
-    time:time,
-    value:value,
-    angle:angle,
-    velocity:velocity
-  };
 };
 
 Roulette.prototype.recentFunction = function(){

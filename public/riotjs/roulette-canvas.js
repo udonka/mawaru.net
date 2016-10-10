@@ -28,7 +28,10 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
 
       this.rouletteFinger.setEventListener(canvas);
 
-      animationSettings();
+      this.roulette.serverConnected().then(function(){
+        console.log("server connected");
+        animationSettings();
+      });
 
     });
 
