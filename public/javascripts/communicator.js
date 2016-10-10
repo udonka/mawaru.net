@@ -1,4 +1,3 @@
-
 function Communicator(){
   this.socket = io();
 
@@ -7,7 +6,6 @@ function Communicator(){
   this.setReceivers();
 
 }
-
 
 Communicator.prototype.setRoulette = function(roulette){
   this.roulette = roulette;
@@ -20,7 +18,6 @@ Communicator.prototype.sendScratch = function(timestamp, value){
   });
 };
 
-
 Communicator.prototype.setReceivers= function(){
 
   var this_comm = this;
@@ -28,8 +25,7 @@ Communicator.prototype.setReceivers= function(){
   this.socket.on("server_scratch",function(message){
 
     this_comm.roulette.impact(message.timestamp, message.value);
-
   });
-
-
 };
+
+

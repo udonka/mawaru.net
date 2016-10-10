@@ -3,7 +3,7 @@ riot.tag2('labels-textarea', '<textarea class="labels-text" rows="5" cols="40" n
     this.roulette = opts.roulette;
 
     this.on("update", function(){
-      this.joined_labels = this.roulette.labels.join("\n");
+      this.joined_labels = this.roulette.getLabels().join("\n");
     });
 
     this.labelsChange = function(e){

@@ -1,0 +1,101 @@
+
+function RouletteClient(roulette){
+  this.socket = io();
+
+  this.model = roulette;
+
+  this.setReceivers();
+}
+
+RouletteClient.prototype.setLabels =function(labels){
+  return this.model.setLabels(labels)
+}
+
+RouletteClient.prototype.getLabels =function(){
+  return this.model.getLabels();
+}
+
+RouletteClient.prototype.isChanged = function(){
+  return this.model.isChanged();
+}
+
+RouletteClient.prototype.drawn = function(){
+  return this.model.drawn();
+}
+
+
+RouletteClient.prototype.getCurrentLabel = function(){
+  return this.model.getCurrentLabel();
+}
+
+RouletteClient.prototype.getVelocity = function(){
+  return this.model.getVelocity();
+}
+
+RouletteClient.prototype.getAngle = function(){
+  return this.model.getAngle();
+};
+
+RouletteClient.prototype.recentFunction = function(){
+  return this.model.recentFunction();
+};
+
+RouletteClient.prototype.initState = function(serverTime ,serverAngle, serverVel){
+  var myTime = Date.now();
+  alert("myTime : "+myTime+", serverTime: "+serverTime+"");
+  var diff = serverTime - myTime;
+  
+  alert("diff : " + diff);
+
+}
+
+
+RouletteClient.prototype.impact = function(timestamp, impactValue){
+  console.log("impact send");
+
+  this.socket.emit("client_scratch", {
+    timestamp:timestamp,
+    value:impactValue
+  });
+
+  return this.model.impact(timestamp, impactValue);
+}
+
+RouletteClient.prototype.setReceivers= function(){
+
+  var this_roulette = this;
+
+  this.socket.on("time_adjust",function(message){
+    var serverTime = message.time;
+    var serverAngle = message.angle;
+    var serverVel = message.velocity;
+
+    this_roulette.initState(serverTime, serverAngle, serverVel);
+
+  }
+
+  this.socket.on("server_scratch",function(message){
+
+    //もってるか調べる
+    this_roulette.model.impact(message.timestamp, message.value);
+  });
+};
+
+
+
+RouletteClient.prototype.firstImpactTime = function(){
+  return this.model.firstImpactTime();
+};
+
+
+//最新のを使っちゃう
+RouletteClient.prototype.calcCurrentAngle = function(timestamp){
+  return this.model.calcCurrentAngle(timestamp);
+};
+
+
+RouletteClient.prototype.calcAngle = function(timestamp){
+  return this.model.calcAngle (timestamp);
+};
+
+

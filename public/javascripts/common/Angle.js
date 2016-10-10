@@ -1,4 +1,3 @@
-
 function isNumber(x){ 
     if( typeof(x) != 'number' && typeof(x) != 'string' )
         return false;

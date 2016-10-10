@@ -97,6 +97,8 @@ RouletteFinger.prototype.pointerUp = function(e){
   var impactForce = diffAngle.get() / diffTime;
 
   if(!isNaN(impactForce) && impactForce != 0){
+
+    //このrouletteは実はRouletteClientなので、
     this.roulette.impact(now, impactForce);
   }
 

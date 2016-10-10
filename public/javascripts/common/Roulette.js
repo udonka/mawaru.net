@@ -1,3 +1,14 @@
+var isServer = function(){
+  console.log("This is server");
+  return (typeof window == "undefined")
+}
+
+if(isServer()){
+  var _ = require('underscore'); //node_moduleから探してくれる
+  var Angle = require('./Angle.js').Angle; //同じディレクトリ
+}
+
+
 function Roulette(angle, velocity, labels){
 
   var this_roulette = this;
@@ -14,29 +25,24 @@ function Roulette(angle, velocity, labels){
 
   //とりあえず最初はいつでも0の位置
 
-  (function(){
-    var firstAngle = this_roulette.angle.get();
-    var firstVelocity = this_roulette.velocity;
+  //この関数の中に閉じ込める
+  var firstAngle = this_roulette.angle.get();
+  var firstVelocity = this_roulette.velocity;
 
-    var now = Date.now();
-    this_roulette.forceHistory = [
-      {
-        time:now,
-        value:0,
-        func:this_roulette.generateMoveFunction(
-          now, //time
-          0,   //impact
-          firstAngle,
-          firstVelocity)
-      }
-    ];
+  this.initState(Date.now(), firstAngle, firstVelocity);
 
-  }());
+
 }
 
-Roulette.prototype.setCommunicator =function(comm){
-  this.communicator = comm;
+Roulette.prototype.initState = function(timestamp, serverAngle, serverVel){
+  var func = this.generateMoveFunction(timestamp, 0, serverAngle, serverVel);
 
+  //ここから、サーバーの時間で、歴史がはじまる
+  this.forceHistory = [{
+    time:timestamp ,
+    value:0,
+    func:func
+  }];
 }
 
 Roulette.prototype.setLabels =function(labels){
@@ -100,9 +106,6 @@ Roulette.prototype.impact = function(timestamp, impactValue){
 
 
 
-  if(this.communicator){
-    this.communicator.sendScratch(timestamp,impactValue);
-  }
 
   var impactTime = timestamp;
 
@@ -164,8 +167,11 @@ Roulette.prototype.generateMoveFunction
     //これにより、計算が非常に楽になる。
     var t_ms  = timestamp - impactTime; 
     if(t_ms < 0 ){
+
+      
       throw new Error("時間を遡ってはいけません. "+
-          impactTime+" 以降の時間を入れてください。");
+          impactTime+" 以降の時間を入れてください。"+
+          timestamp + " ではだめです。");
     }
 
     var t_sec = t_ms / 1000;
@@ -216,7 +222,7 @@ Roulette.prototype.calcCurrentAngle = function(timestamp){
 };
 
 
-Roulette.prototype.calcAngle = function(timestamp){
+Roulette.prototype.calcCurrentAngleWithBack= function(timestamp){
   //今までの歴史の中から適切な関数を探して、
   //それを使ってtimestamp時の角度を計算
 
@@ -243,3 +249,5 @@ Roulette.prototype.calcAngle = function(timestamp){
   this.velocity = ang_vel.velocity;
   return this.angle.get();
 };
+
+this["Roulette"] = Roulette;
