@@ -24,10 +24,18 @@ module.exports = function(server){
 
     socket.on("client_scratch", function(message){
 
-      roulette.impact(message.timestamp, message.value );
+      //クライアントに言われたとおり追加する。
+      var old_ang_vel = roulette.impact(message.timestamp, message.value );
 
-      console.log(JSON.stringify(message));
-      socket.broadcast.emit("server_scratch", message);
+      var state = {
+        time:message.timestamp,
+        value:message.value,
+        angle:old_ang_vel.angle,
+        velocity:old_ang_vel.velocity
+      };
+
+      console.log(JSON.stringify(state));
+      socket.broadcast.emit("server_scratch", state);
 
       console.log(socket.id.slice(0,4) + " scratched" + message);
     });

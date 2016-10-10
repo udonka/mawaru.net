@@ -81,10 +81,16 @@ RouletteClient.prototype.setReceivers= function(){
   });
 
   this.socket.on("server_scratch",function(message){
-
     //もってるか調べる
-    //ここで矛盾がないか調べなければならない！
-    this_roulette.model.impact(message.timestamp, message.value);
+    //ここで矛盾があろうとも、サーバー様の言うことがただしい。
+    //歴史を無理やり付け足す。
+    this_roulette.model.addHistory(
+      message.time,
+      message.value,
+      message.angle,
+      message.velocity
+    );
+    //矛盾のごまかしも仕掛けたい
   });
 };
 

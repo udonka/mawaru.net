@@ -31,6 +31,7 @@ function Roulette(angle, velocity, labels){
 
   this.initState(Date.now(), firstAngle, firstVelocity);
 
+  this.changed = true;//最初は描画するでしょ
 
 }
 
@@ -89,9 +90,43 @@ Roulette.prototype.getAngle = function(){
   return this.angle.get();
 };
 
+Roulette.prototype.recentState = function(){
+  var recentHistory = this.forceHistory[this.forceHistory.length - 1];
+  var time = recentHistory.time;
+  var value = recentHistory.value;
+  var func = recentHistory.func;
+  var ang_vel = func(time);
+  var angle = ang_vel.angle;
+  var velocity = ang_vel.velocity;
+
+  return {
+    time:time,
+    value:value,
+    angle:angle,
+    velocity:velocity
+  };
+};
+
 Roulette.prototype.recentFunction = function(){
   return this.forceHistory[this.forceHistory.length - 1].func;
 };
+
+
+Roulette.prototype.addHistory= function(impactTime, impactValue, impactAngle, impactVelocity){
+
+  var func = this.generateMoveFunction(
+      impactTime,
+      impactValue,
+      impactAngle,
+      impactVelocity);
+
+  this.forceHistory.push({
+    time:impactTime, //時間
+    value:impactValue, //力の大きさ
+    func:func
+  });
+
+}
 
 Roulette.prototype.impact = function(timestamp, impactValue){
 
@@ -116,17 +151,9 @@ Roulette.prototype.impact = function(timestamp, impactValue){
   var impactAngle    = ang_vel.angle;
   var impactVelocity = ang_vel.velocity;
 
-  var func = this.generateMoveFunction(
-      impactTime,
-      impactValue,
-      impactAngle,
-      impactVelocity);
+  this.addHistory(impactTime, impactValue, impactAngle, impactVelocity);
 
-  this.forceHistory.push({
-    time:timestamp, //時間
-    value:impactValue, //力の大きさ
-    func:func
-  });
+  return ang_vel;
 }
 
 
