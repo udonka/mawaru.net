@@ -69,6 +69,10 @@ function RouletteClient(roulette){
   this.timeDiffToServer = 0;
 }
 
+RouletteClient.prototype.on = function(eve, func){
+  return this.model.on(eve,func);
+}
+
 RouletteClient.prototype.setTimer=function(timer){
   return this.model.setTimer(timer);
 }

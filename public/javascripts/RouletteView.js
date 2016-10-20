@@ -5,7 +5,10 @@ function RouletteView(roulette,finger, opts){
   this.center = opts.center || new Vec2(0,0);
   this.radius = opts.radius || 200;
 
-
+  var this_roulette = this;
+  roulette.on("changed",function(){
+    this_roulette.cacheWheel(this_roulette.radius,this_roulette.model.getLabels());
+  });
 }
 
 
@@ -40,7 +43,7 @@ RouletteView.prototype.draw = function(c){
 
   this.drawWheelWithShadow(c, theta, labels);
 
-  this.drawTimer(c, currentLabel, leftSec ,state,leftTime);
+  this.drawTimer(c, labels,  currentLabel, leftSec ,state,leftTime);
 
   this.drawFinger(c);
 }
@@ -73,12 +76,13 @@ RouletteView.prototype.drawFinger = function(c){
 }
 
 
-RouletteView.prototype.drawTimer = function(c, currentLabel, leftSec ,state,leftTime){
+RouletteView.prototype.drawTimer = function(c, labels, currentLabel, leftSec ,state, leftTime){
   var center_x = this.center.x;
   var center_y = this.center.y;
   var radius = this.radius;
 
   var label_num = labels.length;
+  console.log("label numb = " + labels.length);
 
   var label_size = Math.PI * 2 / label_num;
   var label_angle= 0;
@@ -103,7 +107,7 @@ RouletteView.prototype.drawTimer = function(c, currentLabel, leftSec ,state,left
 
     var h = radius*0.1*0.9 * 2;
 
-    c.shadowBlur = radius*0.01;
+    c.shadowBlur = radius * 0.01;
     c.shadowColor = "rgba(0,0,0,0)";
     c.shadowOffsetY = radius*0.01;
 
@@ -122,9 +126,6 @@ RouletteView.prototype.drawTimer = function(c, currentLabel, leftSec ,state,left
 
 
     //drawTimer
-    
-
-
 
     c.shadowBlur = radius*0.02;
     c.shadowColor = "rgba(0,0,0,0)";

@@ -3,7 +3,7 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
     this.roulette = opts.roulette;
     var canvas = this.thecanvas;
 
-    var c      = canvas.getContext("2d");
+    var c = canvas.getContext("2d");
 
     this.on("mount",function(){
       var parent = this.root.parentNode;

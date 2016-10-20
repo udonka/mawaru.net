@@ -69,8 +69,9 @@ class Roulette extends EventEmitter{
     this.changed = true;
     this.labels = labels;
 
+    var this_roulette = this;
     setTimeout(function(){
-      this.emit("changed");
+      this_roulette.emit("changed");
     },0);
   }
 
