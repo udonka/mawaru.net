@@ -1,22 +1,4 @@
-function Communicator(){
-  this.socket = io();
 
-  console.log("connected");
-  
-  this.setReceivers();
-
-}
-
-Communicator.prototype.setRoulette = function(roulette){
-  this.roulette = roulette;
-}
-
-Communicator.prototype.sendScratch = function(timestamp, value){
-  this.socket.emit("client_scratch", {
-    timestamp:timestamp,
-    value:value
-  });
-};
 
 Communicator.prototype.setReceivers= function(){
 

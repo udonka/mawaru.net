@@ -50,7 +50,7 @@ riot.tag2('roulette-canvas', '<canvas name="thecanvas"></canvas>', '', '', funct
 
       roulette.calcCurrentAngleWithBack(Date.now());
 
-      if(roulette.getVelocity() == 0 && !roulette.isChanged()){
+      if(!this_tag.rouletteView.haveToDraw()){
 
         return;
       }

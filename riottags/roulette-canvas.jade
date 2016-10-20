@@ -75,8 +75,9 @@ roulette-canvas
 
       roulette.calcCurrentAngleWithBack(Date.now());
 
-      if(roulette.getVelocity() == 0 && !roulette.isChanged()){
-        //console.log("うごいてないのでさぼります");
+      if(!this_tag.rouletteView.haveToDraw()){
+        //かかなくていいのでかかない
+
         return;
       }
 

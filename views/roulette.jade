@@ -8,11 +8,13 @@ block content
     labels-textarea
 
   script(type="text/javascript" src="/javascripts/underscore-min.js")
+  script(type="text/javascript" src="/javascripts/eventemitter2.js")
   script(type="text/javascript" src="/javascripts/hand.min.js")
   script(type="text/javascript" src="/javascripts/riot.min.js")
   script(type="text/javascript" src="/javascripts/common/Angle.js")
   script(type="text/javascript" src="/javascripts/common/Vec2.js")
   script(type="text/javascript" src="/javascripts/common/Roulette.js")
+  script(type="text/javascript" src="/javascripts/common/Timer.js")
   script(type="text/javascript" src="/javascripts/RouletteView.js")
   script(type="text/javascript" src="/javascripts/RouletteFinger.js")
   script(type="text/javascript" src="/javascripts/canvaslib.js")
@@ -21,15 +23,18 @@ block content
   script(type="text/javascript" src="/socket.io/socket.io.js")
   script(type="text/javascript" src="/javascripts/RouletteClient.js")
 
-
   script.
+    var timer = new Timer(3000);
+
     var labels = ["Hitokage","Fusigidane", "Zenigame", ];
     var roulette_model = new Roulette(0,Math.PI, labels);
+    roulette_model.setTimer(timer);
     var roulette = new RouletteClient(roulette_model);
 
 
     riot.mount("roulette-canvas", {roulette:roulette});
     riot.mount("labels-textarea", {roulette:roulette});
 
+    
     
 

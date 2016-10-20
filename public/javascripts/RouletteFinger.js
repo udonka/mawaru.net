@@ -43,7 +43,16 @@ RouletteFinger.prototype.pointerDown = function(e){
                    .sub(this.center).div(this.radius);
 
   var range = downPoint.getLength();
-  if(range < 0.1 || range > 1 ){
+  //真ん中をクリック
+  if(range < 0.2){
+
+    this.roulette.toggleTimer(Date.now());
+
+    return;
+  }
+  else if(range > 1 ){
+
+
     return;
   }
 

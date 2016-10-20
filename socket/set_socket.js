@@ -1,43 +1,92 @@
-var socket_io = require("socket.io");
+var Server = require("socket.io");
 var Roulette = require("../model/common/Roulette").Roulette;
+var Timer = require("../model/common/Timer");
 
 var roulette = new Roulette(0,0,["label", "hoge", "fuga"]);
 
-module.exports = function(server){
+roulette.setTimer( new Timer(3000) );
 
-  var io = socket_io(server);
+module.exports = function(http){
+
+  var io = new Server(http);
 
   console.log("io connnection setting...");
 
   io.on("connection", function(socket){
-    var now = Date.now();
-    roulette.calcCurrentAngle(now);
-    socket.emit('time_adjust', {
-      timestamp:now,
-      angle: roulette.getAngle(),
-      velocity: roulette.getVelocity(), 
-    });
 
     console.log("a user "+socket.id.slice(0,4)+" connected");
 
-    socket.join("default");
+
+    socket.on("client_handshake", function(message){
+      console.log("a user "+socket.id.slice(0,4)+" handshaked");
+
+      var now = Date.now();
+      roulette.calcCurrentAngle(now);
+
+      var obj = {
+        timestamp:now,
+        angle: roulette.getAngle(),
+        velocity: roulette.getVelocity(), 
+      };
+
+      var timer = roulette.getTimer();
+      if(timer){
+        obj.timer = {
+          startTime: timer.startTime,
+          countTime: timer.countTime
+        };
+      }
+
+      socket.emit('server_handshake', obj);
+    });
+
+
 
     socket.on("client_scratch", function(message){
 
       //クライアントに言われたとおり追加する。
-      var old_ang_vel = roulette.impact(message.timestamp, message.value );
+      //ただし、最後のimpactよりも前のインパクトは採用されない
+      //その結果矛盾が生じることがある。
+      roulette.impact(message.timestamp, message.value , function(history){
 
-      var state = {
-        time:message.timestamp,
-        value:message.value,
-        angle:old_ang_vel.angle,
-        velocity:old_ang_vel.velocity
-      };
+        var state = {
+          timestamp:history.timestamp,
+          value:history.value,
+          angle:history.angle,
+          velocity:history.velocity
+        };
 
-      console.log(JSON.stringify(state));
-      socket.broadcast.emit("server_scratch", state);
+        //同じ部屋の住人（自分含む）に送りたい
+        io.emit("server_scratch", state);
 
-      console.log(socket.id.slice(0,4) + " scratched" + message);
+        console.log(socket.id.slice(0,4) + " scratched" + message);
+
+      });
+
+    });
+
+    socket.on("client_timerStart", function(message){
+
+      var timer = roulette.getTimer();
+
+      timer.setCountTime(message.countTime);
+      timer.start(message.startTime, function(){
+        console.log("timer stop");
+        //timer stop;
+        //まあ、わざわざ知らせたところで今更なに？って話ではある。
+      });
+
+      socket.broadcast.emit("server_timerStart", message);
+
+    });
+
+    socket.on("client_timerRelease", function(){
+      
+      var timer = roulette.getTimer();
+
+      timer.release();
+
+      socket.broadcast.emit("server_timerRelease");
     });
 
     socket.on("disconnect", function(){
