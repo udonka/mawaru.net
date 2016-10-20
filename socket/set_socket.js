@@ -42,6 +42,15 @@ module.exports = function(http){
 
 
 
+    socket.on("client_setLabels", function(message){
+      console.log("message.labels");
+
+      console.log(message.labels);
+
+      io.emit("server_setLabels", message);
+
+    });
+
     socket.on("client_scratch", function(message){
 
       //クライアントに言われたとおり追加する。

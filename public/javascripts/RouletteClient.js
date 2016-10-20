@@ -64,8 +64,13 @@ function RouletteClient(roulette){
 
   this.socket.on("server_timerRelease",function(){
     this_roulette.model.timer.release();
-
   });
+
+  this.socket.on("server_setLabels",function(message){
+    console.log("set labels");
+    this_roulette.model.setLabels(message.labels);
+  });
+
   this.timeDiffToServer = 0;
 }
 
@@ -139,6 +144,8 @@ RouletteClient.prototype.releaseTimer=function(){
 
 
 RouletteClient.prototype.setLabels =function(labels){
+  this.socket.emit("client_setLabels", {labels});
+  console.log("set label");
   return this.model.setLabels(labels)
 }
 

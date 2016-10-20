@@ -112,7 +112,7 @@ RouletteView.prototype.drawTimer = function(c, labels, currentLabel, leftSec ,st
     c.shadowOffsetY = radius*0.01;
 
 
-    var hue_angle = (hue_size * currentLabel.index  + hue_size/2) % 360;
+    var hue_angle = (hue_size * currentLabel.index + 60) % 360;
 
     c.fillStyle = hsva(hue_angle, 0.5, 0.95, 1);
     c.fillRect(0, - h/2 , radius, h);
@@ -293,7 +293,7 @@ RouletteView.prototype.drawWheel = function(c, radius, labels){
     for(i in labels){
       var label = labels[i];
       label_angle = label_size * i ;
-      hue_angle = (hue_size * i  + hue_size/2) % 360;
+      hue_angle = (hue_size * i  + 60) % 360;
 
 
       c.beginPath();
