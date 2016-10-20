@@ -38,6 +38,8 @@ module.exports = function(http){
       }
 
       socket.emit('server_handshake', obj);
+
+      io.emit("server_setLabels", {labels:roulette.getLabels()});
     });
 
 
