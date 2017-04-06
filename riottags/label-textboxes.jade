@@ -1,0 +1,96 @@
+label-textboxes
+  ul.labelTextBoxes
+    li.labelTextBoxes__item(each="{label,index in labels}")
+      div.labelTextBoxes__grip =
+      input.labelTextBoxes__labelText(type="textbox" value="{label}" 
+        onchange="{labelChanged}" onfocus="{labelFocused}" onkeypress="{labelKeyPressed}")
+      input.labelTextBoxes__deleteButton(type="button" value="X" onclick="{labelDeleted}")
+
+  script.
+
+    this.labels =opts.labels;
+    this.currentLabelIndex = 0;
+    this.onChangeFunc = opts.onchange;
+
+    var this_tag= this;
+
+
+    this.on("update", function(){
+      this.changed(this.labels);
+
+    });
+
+
+
+    getCurrentLabelIndex(){
+      return this.currentLabelIndex;
+    }
+
+    setCurrentLabelIndex(index){
+      if(typeof index != "number"){
+        throw new Error("index must be number");
+      }
+
+      if(index < 0 || index >= this.labels.length){
+        throw new Error("index outof range");
+      }
+
+
+      this.currentLabelIndex = index;
+
+      return this.currentLabelIndex;
+    }
+
+    labelKeyPressed(e){
+
+      //BS も実装したいけど、ここはちがうみたい
+      var index = e.item.index;
+
+      if(e.charCode == 13){
+        
+        console.log("kaigyo")
+        console.log(e)
+        this.labels.splice(index+1,0,"");
+        console.log(this.labels);
+
+        this.setCurrentLabelIndex(this.getCurrentLabelIndex() + 1);
+
+        //prevent default
+        return false;
+
+      }
+      else{
+        return true; //ちゃんと返さないと、preventDefaultと同じ効果になってしまう！！
+      }
+
+    }
+
+
+
+    labelChanged(e){
+      console.log(e);
+      var input       = e.target;
+      var label_index = e.item.index;
+      this.labels[label_index] = input.value;
+    }
+
+    labelDeleted(e){
+      var index = e.item.index;
+      this.labels.splice(index, 1);
+
+    }
+
+    labelFocused(e){
+      var labelIndex = e.item.index;
+      this.setCurrentLabelIndex(labelIndex);
+      e.preventUpdate = true;
+    }
+
+    changed(labels){
+      if(typeof this.onChangeFunc  =="function"){
+        this.onChangeFunc(labels);
+      }
+      else{
+        console.log("there's no callback function");
+      }
+    }

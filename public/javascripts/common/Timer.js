@@ -1,13 +1,8 @@
 'use strict';
 
-var isServer = function(){
-  return (typeof window == "undefined")
-}
-
-
 class Timer{
-  constructor(count_time){
 
+  constructor(count_time){
     this.startTime = null;
     this.stopTime = null;
     this.countTime = count_time || 3000; //in ms
@@ -91,6 +86,9 @@ class Timer{
 
 }
 
+var isServer = function(){
+  return (typeof window == "undefined")
+}
 
 if(isServer()){
   module.exports = Timer;

@@ -5,7 +5,7 @@ block content
   div.page
     div(style="text-align:center")
       roulette-canvas
-    labels-textarea
+    label-textboxes
 
   script(type="text/javascript" src="/javascripts/underscore-min.js")
   script(type="text/javascript" src="/javascripts/eventemitter2.js")
@@ -19,7 +19,7 @@ block content
   script(type="text/javascript" src="/javascripts/RouletteFinger.js")
   script(type="text/javascript" src="/javascripts/canvaslib.js")
   script(type="text/javascript" src="/riotjs/roulette-canvas.js")
-  script(type="text/javascript" src="/riotjs/labels-textarea.js")
+  script(type="text/javascript" src="/riotjs/label-textboxes.js")
   script(type="text/javascript" src="/socket.io/socket.io.js")
   script(type="text/javascript" src="/javascripts/RouletteClient.js")
 
@@ -33,7 +33,11 @@ block content
 
 
     riot.mount("roulette-canvas", {roulette:roulette});
-    riot.mount("labels-textarea", {roulette:roulette});
+    riot.mount("label-textboxes", {labels:labels, onchange:function(labels){
+      console.log("onchange");
+      console.log(labels);
+      roulette.setLabels(labels);
+    }});
 
     
     

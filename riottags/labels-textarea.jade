@@ -1,3 +1,4 @@
+// not using
 labels-textarea
   textarea.labels-text(rows="5" cols="40" name="labels_text" onkeyup="{labelsChange}" ) {joined_labels}
 
@@ -6,10 +7,10 @@ labels-textarea
     this.roulette = opts.roulette;
 
 
-    var this_textarea = this;
+    var this_tag = this;
 
     this.roulette.on("changed", function(){
-      this_textarea.update();
+      this_tag.update();
     });
 
     this.on("update", function(){
@@ -18,6 +19,7 @@ labels-textarea
 
     labelsChange(e){
       var textArea = e.target;
+      //エンターか空白のときだけにしよう。
 
       var labels_string = textArea.value;
 

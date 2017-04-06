@@ -620,3 +620,30 @@ a {
 .labels-text {
   display: block;
   width: 100%; }
+
+.labelTextBoxes {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #eee;
+  border-radius: 3px; }
+
+.labelTextBoxes__item {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; }
+
+.labelTextBoxes__grip {
+  box-sizing: border-box;
+  float: left;
+  width: 5%;
+  height: 2em; }
+
+.labelTextBoxes__labelText {
+  border: 0;
+  width: 85%;
+  height: 2em;
+  float: left; }
+
+.labelTextBoxes__deleteButton {
+  width: 10%;
+  height: 2em; }

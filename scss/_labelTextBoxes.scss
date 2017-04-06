@@ -1,0 +1,40 @@
+
+.labelTextBoxes {
+  margin:0;
+  padding:0;
+  border:1px solid #eee;
+  border-radius:3px;
+
+  
+}
+
+.labelTextBoxes__item{
+  margin:0;
+  padding:0;
+
+  overflow:hidden;
+}
+
+$label-box-height:2em;
+
+.labelTextBoxes__grip{
+  box-sizing:border-box;
+  float:left;
+  width:5%;
+  height: $label-box-height;
+}
+
+.labelTextBoxes__labelText{
+  border:0;
+
+  width:85%;
+  height: $label-box-height;
+
+  float:left;
+}
+
+.labelTextBoxes__deleteButton{
+  width:10%;
+  height: $label-box-height;
+
+}

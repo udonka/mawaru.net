@@ -1,11 +1,12 @@
 
+
 riot.tag2('labels-textarea', '<textarea class="labels-text" rows="5" cols="40" name="labels_text" onkeyup="{labelsChange}">{joined_labels}</textarea>', '', '', function(opts) {
     this.roulette = opts.roulette;
 
-    var this_textarea = this;
+    var this_tag = this;
 
     this.roulette.on("changed", function(){
-      this_textarea.update();
+      this_tag.update();
     });
 
     this.on("update", function(){

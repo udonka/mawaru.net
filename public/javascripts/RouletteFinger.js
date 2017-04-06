@@ -30,6 +30,7 @@ RouletteFinger.prototype.setEventListener = function(canvas){
   });
 
 
+
   canvas.addEventListener("pointermove",function(e){
     //e.preventDefault();
     this_finger.pointerMove(e);

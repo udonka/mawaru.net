@@ -47,9 +47,11 @@ module.exports = function(http){
     socket.on("client_setLabels", function(message){
       console.log("message.labels");
 
+      var labels = roulette.setLabels(message.labels);
+
       console.log(message.labels);
 
-      io.emit("server_setLabels", message);
+      io.emit("server_setLabels", {labels});
 
     });
 

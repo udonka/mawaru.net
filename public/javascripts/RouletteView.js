@@ -59,7 +59,6 @@ RouletteView.prototype.drawFinger = function(c){
     return;
   }
   else{
-    console.log("draw");
   }
 
   c.save();
@@ -82,7 +81,6 @@ RouletteView.prototype.drawTimer = function(c, labels, currentLabel, leftSec ,st
   var radius = this.radius;
 
   var label_num = labels.length;
-  console.log("label numb = " + labels.length);
 
   var label_size = Math.PI * 2 / label_num;
   var label_angle= 0;

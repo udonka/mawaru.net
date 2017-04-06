@@ -63,6 +63,7 @@ function RouletteClient(roulette){
 
 
   this.socket.on("server_timerRelease",function(){
+    console.log("server_timerRelease");
     this_roulette.model.timer.release();
   });
 
@@ -145,7 +146,6 @@ RouletteClient.prototype.releaseTimer=function(){
 
 RouletteClient.prototype.setLabels =function(labels){
   this.socket.emit("client_setLabels", {labels});
-  console.log("set label");
   return this.model.setLabels(labels)
 }
 
